@@ -1,0 +1,48 @@
+<div class="container">
+
+    <h1>To-Do </h1>
+
+    <hr>
+    <form (ngSubmit)="onSubmit(taskForm)" #taskForm="ngForm">
+        <div class="form-group">
+            <label for="task">Task</label>
+            <input type="text" class="form-control" id="task" placeholder="Enter task" ngModel name="task" required>
+        </div>
+        <button [disabled]="taskForm.invalid" id="submitButton" type="submit" class="btn btn-primary">add</button>
+    </form>
+
+    <hr>
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Task</th>
+                <th scope="col">Completed</th>
+                <th scope="col"> Edit</th>
+                <th scope="col">Delete</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let t of taskArray; index as i">
+                <td> <ng-container *ngIf="!t.isEditing; else editField">
+                    <div  (click)="onEdit(i)">{{ t.taskName }}</div>
+                  </ng-container>
+                  <ng-template #editField>
+                    <input (keyup.enter)="onSave(i)" type="text" [ngModel]="t.taskName" (ngModelChange)="t.taskName = $event" [disabled]="!t.isEditing">
+         </ng-template>
+                </td>
+                
+                <td ><input [ngModel]="t.isCompleted"  (change)="onCheck(i)" id="myCheckbox" type="checkbox"></td>
+                <td><button class="btn btn-success btn-sm" (click)="onEdit(i)">Edit</button></td>
+                <td><button class="btn btn-danger btn-sm" (click)="onDelete(i)">Delete</button></td>
+        <ng-container *ngIf="t.isEditing">
+                    <button class="btn btn-success btn-sm" (click)="onSave(i)">Save</button>
+            
+         </ng-container>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+<pre>{{taskArray | json}}</pre>
